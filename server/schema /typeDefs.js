@@ -44,8 +44,8 @@ type Mutation {
         title: String!
     ): User
 
-    removeBook(userId: ID!, bookId: String!): User
-    removeUser(userId: ID!): User
+    deleteBook(userId: ID!, bookId: String!): User
+    deleteUser(userId: ID!): User
 }
 `;
 
