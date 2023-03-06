@@ -1,11 +1,13 @@
 const express = require("express");
 const path = require("path");
+
+// importing apollo server package
+const { ApolloServer } = require("apollo-server-express");
+
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
 
 const { authMiddleware } = require("./utils/auth");
-// importing apollo server package
-const { ApolloServer } = require("apollo-server-express");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
