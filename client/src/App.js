@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+//importing apollo
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
 //importing routes
 import SearchBooks from "./pages/SearchBooks";
 import SavedBooks from "./pages/SavedBooks";
 import Navbar from "./components/Navbar";
-
-//importing apollo client packages to access backend database
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
   uri: "/graphql",

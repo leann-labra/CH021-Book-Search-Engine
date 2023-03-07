@@ -14,12 +14,15 @@ const LoginForm = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   //using login route from utils
-  const [loginUser, { error }] = useMutation(LOGIN_USER);
+  const [loginUser, { loading, error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
+
+  if (loading) return "Submitting...";
+  if (error) return `Submission error! ${error.message}`;
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -93,6 +96,11 @@ const LoginForm = () => {
           disabled={!(userFormData.email && userFormData.password)}
           type="submit"
           variant="success"
+          // onSubmit={(e) => {
+          //   e.preventDefault();
+          //   loginUser({ variables: { type: data.value } });
+          //   data.value = "";
+          // }}
         >
           Submit
         </Button>

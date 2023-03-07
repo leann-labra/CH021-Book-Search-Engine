@@ -54,6 +54,8 @@ const SignupForm = () => {
     });
   };
 
+  if (error) return `Submission error! ${error.message}`;
+
   return (
     <>
       {/* This is needed for the validation functionality above */}
