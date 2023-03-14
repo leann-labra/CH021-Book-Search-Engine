@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Jumbotron,
   Container,
@@ -12,8 +12,8 @@ import { removeBookId } from "../utils/localStorage";
 
 // importing react hooks to utilize apollo
 import { useQuery, useMutation } from "@apollo/client";
-import { QUERY_USER } from "../utils/queries";
-import { DELETE_BOOK } from "../utils/mutations";
+import { GET_ME } from "../utils/queries";
+import { REMOVE_BOOK } from "../utils/mutations";
 
 const SavedBooks = () => {
   // creating state for setting user data
@@ -21,27 +21,27 @@ const SavedBooks = () => {
 
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
-  const { loading, error, data } = useQuery(QUERY_USER, {
+  const { loading, error } = useQuery(GET_ME, {
     variables: { userId: Auth.getProfile().data._id },
   });
   // use mutation hook to delete book
-  const [deleteBook] = useMutation(DELETE_BOOK);
+  const [deleteBook] = useMutation(REMOVE_BOOK);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-        if (!token) {
-          return false;
-        }
-        setUserData(data?.user || []);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getUserData();
-  });
+  //       if (!token) {
+  //         return false;
+  //       }
+  //       setUserData(data?.user || []);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   getUserData();
+  // });
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {

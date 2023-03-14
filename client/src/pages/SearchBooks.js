@@ -10,11 +10,12 @@ import {
 } from "react-bootstrap";
 
 import Auth from "../utils/auth";
+
 import { searchGoogleBooks } from "../utils/googleBooksAPI";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 
 // using react hooks with apollo client
-import { ADD_BOOK } from "../utils/mutations";
+import { SAVE_BOOK } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
 
 const SearchBooks = () => {
@@ -24,7 +25,7 @@ const SearchBooks = () => {
   const [searchInput, setSearchInput] = useState("");
 
   // adding useMutation hook to add a book
-  const [addBook, { error }] = useMutation(ADD_BOOK);
+  const [addBook, { error }] = useMutation(SAVE_BOOK);
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());

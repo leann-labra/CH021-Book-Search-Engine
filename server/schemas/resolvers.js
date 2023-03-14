@@ -1,5 +1,6 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User } = require("../models");
+const bookSchema = require("../models/Book");
 const { signToken } = require("../utils/auth");
 
 const resolvers = {
@@ -8,7 +9,7 @@ const resolvers = {
       return await User.find();
     },
     // finding a single user
-    user: async (parent, { userId }) => {
+    me: async (parent, { userId }) => {
       return await User.findOne({ _id: userId });
     },
   },
@@ -16,8 +17,9 @@ const resolvers = {
   Mutation: {
     // sign up page
     addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
+      const user = await User.create({ email, password });
       const token = signToken(user);
+      // returning an Auth type
       return { token, user };
     },
     login: async (parent, { email, password }) => {
@@ -34,51 +36,50 @@ const resolvers = {
       }
 
       const token = signToken(user);
-
+      // returning Auth type
       return { token, user };
     },
-    addBook: async (
+    saveBook: async (
       parent,
       { userId, authors, description, bookId, image, link, title }
     ) => {
-      if (context.user) {
-        const book = await Book.create({
-          bookId,
-          authors,
-          description,
-          image,
-          link,
-          title,
-        });
+      // creating a book object
+      const book = {
+        bookId,
+        authors,
+        description,
+        image,
+        link,
+        title,
+      };
 
-        return User.findOneandUpdate(
-          { _id: userId },
-          {
-            $addtoSet: {
-              savedBooks: book,
-            },
+      return User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $addToSet: {
+            savedBooks: book,
           },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
-      }
-    },
-    deleteBook: async (parent, { bookId }, context) => {
-      //since books is used as subdocument to User, must update User
-      await User.findOneAndUpdate(
-        { _id: context.user._id },
-        //   deletes book
-        { $pull: { savedBooks: { bookId: deletedBook } } },
-        { new: true }
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
       );
+    },
+  },
+  removeBook: async (parent, { bookId }, context) => {
+    //since books is used as subdocument to User, must update User
+    await User.findOneAndUpdate(
+      { _id: context.user._id },
+      //   deletes book
+      { $pull: { savedBooks: { bookId: deletedBook } } },
+      { new: true }
+    );
 
-      return deletedBook;
-    },
-    deleteUser: async (parent, { userId }) => {
-      return User.findOneAndDelete({ _id: userId });
-    },
+    return deletedBook;
+  },
+  deleteUser: async (parent, { userId }) => {
+    return User.findOneAndDelete({ _id: userId });
   },
 };
 

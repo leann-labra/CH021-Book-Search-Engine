@@ -14,7 +14,7 @@ const LoginForm = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   //using login route from utils
-  const [loginUser, { loading, error }] = useMutation(LOGIN_USER);
+  const [loginUser, { loading, data, error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -96,11 +96,11 @@ const LoginForm = () => {
           disabled={!(userFormData.email && userFormData.password)}
           type="submit"
           variant="success"
-          // onSubmit={(e) => {
-          //   e.preventDefault();
-          //   loginUser({ variables: { type: data.value } });
-          //   data.value = "";
-          // }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            loginUser({ variables: { type: data.value } });
+            data.value = "";
+          }}
         >
           Submit
         </Button>
